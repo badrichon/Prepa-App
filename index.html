@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrepApp - Suite de productivité pour classes préparatoires</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head> 
+<body>
+    <div class="app-container">
+        <!-- Header principal -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1>PrepApp</h1>
+                <p class="app-subtitle">Suite complète de productivité pour classes préparatoires</p>
+                <button id="themeToggle" class="theme-toggle btn btn--outline btn--sm">🌙</button>
+            </div>
+        </header>
+
+        <!-- Navigation par onglets -->
+        <nav class="tab-navigation">
+            <div class="tab-container">
+                <button class="tab-btn active" data-tab="matrix">📋 Matrice</button>
+                <button class="tab-btn" data-tab="pomodoro">🍅 Pomodoro</button>
+                <button class="tab-btn" data-tab="habits">✅ Habitudes</button>
+                <button class="tab-btn" data-tab="planning">📅 Planning</button>
+                <button class="tab-btn" data-tab="wellness">😌 Bien-être</button>
+                <button class="tab-btn" data-tab="analytics">📊 Analytics</button>
+                <button class="tab-btn" data-tab="reminders">🔔 Rappels</button>
+                <button class="tab-btn" onclick="window.location.href='C:/Users/badri/Desktop/chapitres de cours/index.html';">Revision Math</button>
+            </div>
+        </nav>
+
+        <!-- Contenu principal -->
+        <main class="main-content">
+            
+            <!-- PAGE MATRICE D'EISENHOWER -->
+            <section id="matrix" class="tab-content active">
+                <div class="container">
+                    <div class="page-header">
+                        <h2>Matrice d'Eisenhower</h2>
+                        <p>Organisez vos tâches par priorité et urgence</p>
+                    </div>
+
+                    <!-- Formulaire d'ajout de tâche -->
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>Ajouter une nouvelle tâche</h3>
+                            <form id="taskForm" class="task-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="taskTitle" class="form-label">Titre de la tâche *</label>
+                                        <input type="text" id="taskTitle" class="form-control" required placeholder="Ex: Réviser le chapitre sur les intégrales">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="taskCategory" class="form-label">Matière</label>
+                                        <select id="taskCategory" class="form-control">
+                                            <option value="">Sélectionner une matière</option>
+                                            <option value="SI">SI</option>
+                                            <option value="Mathématiques">Mathématiques</option>
+                                            <option value="Physique">Physique</option>
+                                            <option value="Chimie">Chimie</option>
+                                            <option value="Français">Français</option>
+                                            <option value="Anglais">Anglais</option>
+                                            <option value="Allemand">Allemand</option>
+                                            <option value="Philosophie">Philosophie</option>
+                                            <option value="Histoire-Géographie">Histoire-Géographie</option>
+                                            <option value="Informatique">Informatique</option>
+                                            <option value="SVT">SVT</option>
+                                            <option value="Autres">Autres</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="taskQuadrant" class="form-label">Quadrant *</label>
+                                        <select id="taskQuadrant" class="form-control" required>
+                                            <option value="">Choisir un quadrant</option>
+                                            <option value="urgent-important">À faire immédiatement (Urgent + Important)</option>
+                                            <option value="important-not-urgent">À planifier (Important)</option>
+                                            <option value="urgent-not-important">À traiter rapidement (Urgent)</option>
+                                            <option value="not-urgent-not-important">À éviter/Reporter</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="taskDueDate" class="form-label">Date d'échéance</label>
+                                        <input type="date" id="taskDueDate" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="taskDuration" class="form-label">Durée estimée (min)</label>
+                                        <input type="number" id="taskDuration" class="form-control" placeholder="30" min="1">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn--primary">Ajouter la tâche</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Matrice -->
+                    <div class="matrix-grid">
+                        <div class="quadrant" data-quadrant="urgent-important">
+                            <div class="quadrant-header quadrant-urgent-important">
+                                <h3>À faire immédiatement</h3>
+                                <p>Urgent et Important</p>
+                                <span class="task-count" id="count-urgent-important">0 tâche(s)</span>
+                            </div>
+                            <div class="task-list" id="urgent-important">
+                                <div class="quadrant-examples">
+                                    <p><em>Ex: Devoir pour demain, Révisions pour DS</em></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quadrant" data-quadrant="important-not-urgent">
+                            <div class="quadrant-header quadrant-important-not-urgent">
+                                <h3>À planifier</h3>
+                                <p>Important mais pas Urgent</p>
+                                <span class="task-count" id="count-important-not-urgent">0 tâche(s)</span>
+                            </div>
+                            <div class="task-list" id="important-not-urgent">
+                                <div class="quadrant-examples">
+                                    <p><em>Ex: Révisions de fond, Projets long terme</em></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quadrant" data-quadrant="urgent-not-important">
+                            <div class="quadrant-header quadrant-urgent-not-important">
+                                <h3>À traiter rapidement</h3>
+                                <p>Urgent mais pas Important</p>
+                                <span class="task-count" id="count-urgent-not-important">0 tâche(s)</span>
+                            </div>
+                            <div class="task-list" id="urgent-not-important">
+                                <div class="quadrant-examples">
+                                    <p><em>Ex: Emails, Tâches administratives</em></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quadrant" data-quadrant="not-urgent-not-important">
+                            <div class="quadrant-header quadrant-not-urgent-not-important">
+                                <h3>À éviter/Reporter</h3>
+                                <p>Ni Urgent ni Important</p>
+                                <span class="task-count" id="count-not-urgent-not-important">0 tâche(s)</span>
+                            </div>
+                            <div class="task-list" id="not-urgent-not-important">
+                                <div class="quadrant-examples">
+                                    <p><em>Ex: Distractions, Tâches non essentielles</em></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAGE POMODORO -->
+            <section id="pomodoro" class="tab-content">
+                <div class="container">
+                    <div class="page-header">
+                        <h2>Timer Pomodoro</h2>
+                        <p>Technique de gestion du temps pour améliorer votre concentration</p>
+                    </div>
+                    
+                    <div class="pomodoro-container">
+                        <div class="timer-display">
+                            <div class="timer-circle">
+                                <svg class="timer-svg" viewBox="0 0 100 100">
+                                    <circle class="timer-bg" cx="50" cy="50" r="45"/>
+                                    <circle class="timer-progress" cx="50" cy="50" r="45" id="timerProgress"/>
+                                </svg>
+                                <div class="timer-text">
+                                    <span id="timerDisplay">25:00</span>
+                                    <span id="timerLabel">Session de travail</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="timer-controls">
+                            <button id="startTimer" class="btn btn--primary btn--lg">▶️ Démarrer</button>
+                            <button id="pauseTimer" class="btn btn--secondary btn--lg" disabled>⏸️ Pause</button>
+                            <button id="resetTimer" class="btn btn--outline btn--lg">🔄 Reset</button>
+                        </div>
+                        
+                        <div class="timer-settings">
+                            <div class="setting-item">
+                                <label for="workDuration">Durée travail (min)</label>
+                                <input type="number" id="workDuration" value="25" min="1" max="60">
+                            </div>
+                            <div class="setting-item">
+                                <label for="breakDuration">Pause courte (min)</label>
+                                <input type="number" id="breakDuration" value="5" min="1" max="15">
+                            </div>
+                            <div class="setting-item">
+                                <label for="longBreakDuration">Pause longue (min)</label>
+                                <input type="number" id="longBreakDuration" value="15" min="10" max="30">
+                            </div>
+                        </div>
+                        
+                        <div class="pomodoro-stats">
+                            <div class="stat-card">
+                                <span class="stat-number" id="sessionsToday">0</span>
+                                <span class="stat-label">Sessions aujourd'hui</span>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-number" id="cycleProgress">1/4</span>
+                                <span class="stat-label">Cycle en cours</span>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-number" id="totalTime">0h</span>
+                                <span class="stat-label">Temps total</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAGE HABIT TRACKER -->
+            <section id="habits" class="tab-content">
+                <div class="container">
+                    <div class="page-header">
+                        <h2>Suivi des Habitudes</h2>
+                        <p>Développez et maintenez vos bonnes habitudes quotidiennes</p>
+                    </div>
+                    
+                    <div class="habits-container">
+                        <div class="habit-form-section">
+                            <div class="card">
+                                <div class="card__body">
+                                    <h3>Ajouter une habitude</h3>
+                                    <form id="habitForm">
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="habitName" class="form-label">Nom de l'habitude</label>
+                                                <input type="text" id="habitName" class="form-control" placeholder="Ex: Révision quotidienne">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="habitPreset" class="form-label">Ou choisir prédéfinie</label>
+                                                <select id="habitPreset" class="form-control">
+                                                    <option value="">Habitudes suggérées</option>
+                                                    <option value="Révision quotidienne">Révision quotidienne</option>
+                                                    <option value="Sport (30min)">Sport (30min)</option>
+                                                    <option value="Sommeil 8h">Sommeil 8h</option>
+                                                    <option value="Lecture cours du jour">Lecture cours du jour</option>
+                                                    <option value="Fiches de révision">Fiches de révision</option>
+                                                    <option value="Pause déjeuner équilibrée">Pause déjeuner équilibrée</option>
+                                                    <option value="Méditation (10min)">Méditation (10min)</option>
+                                                    <option value="Révision vocabulaire langues">Révision vocabulaire langues</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn--primary">Ajouter l'habitude</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="habits-grid" id="habitsGrid">
+                            <!-- Les habitudes seront générées dynamiquement -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAGE PLANNING -->
+            <section id="planning" class="tab-content">
+                <div class="container">
+                    <div class="page-header">
+                        <h2>Planificateur de Révisions</h2>
+                        <p>Organisez vos sessions de révision par matière</p>
+                    </div>
+                    
+                    <div class="planning-container">
+                        <div class="planning-form">
+                            <div class="card">
+                                <div class="card__body">
+                                    <h3>Ajouter une session de révision</h3>
+                                    <form id="planningForm">
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="sessionSubject" class="form-label">Matière</label>
+                                                <select id="sessionSubject" class="form-control" required>
+                                                    <option value="">Sélectionner une matière</option>
+                                                    <option value="Mathématiques">Mathématiques</option>
+                                                    <option value="Physique">Physique</option>
+                                                    <option value="Chimie">Chimie</option>
+                                                    <option value="Français">Français</option>
+                                                    <option value="Anglais">Anglais</option>
+                                                    <option value="Allemand">Allemand</option>
+                                                    <option value="Philosophie">Philosophie</option>
+                                                    <option value="Histoire-Géographie">Histoire-Géographie</option>
+                                                    <option value="Informatique">Informatique</option>
+                                                    <option value="SVT">SVT</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="sessionDate" class="form-label">Date</label>
+                                                <input type="date" id="sessionDate" class="form-control" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="sessionTime" class="form-label">Heure</label>
+                                                <select id="sessionTime" class="form-control" required>
+                                                    <option value="">Sélectionner l'heure</option>
+                                                    <option value="07:00">07:00</option>
+                                                    <option value="08:00">08:00</option>
+                                                    <option value="09:00">09:00</option>
+                                                    <option value="10:00">10:00</option>
+                                                    <option value="11:00">11:00</option>
+                                                    <option value="12:00">12:00</option>
+                                                    <option value="13:00">13:00</option>
+                                                    <option value="14:00">14:00</option>
+                                                    <option value="15:00">15:00</option>
+                                                    <option value="16:00">16:00</option>
+                                                    <option value="17:00">17:00</option>
+                                                    <option value="18:00">18:00</option>
+                                                    <option value="19:00">19:00</option>
+                                                    <option value="20:00">20:00</option>
+                                                    <option value="21:00">21:00</option>
+                                                    <option value="22:00">22:00</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="sessionDuration" class="form-label">Durée (h)</label>
+                                                <input type="number" id="sessionDuration" class="form-control" min="0.5" max="8" step="0.5" value="1" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="sessionTopic" class="form-label">Sujet/Chapitre</label>
+                                            <input type="text" id="sessionTopic" class="form-control" placeholder="Ex: Intégrales par parties">
+                                        </div>
+                                        <button type="submit" class="btn btn--primary">Planifier la session</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="planning-calendar" id="planningCalendar">
+                            <!-- Le calendrier sera généré dynamiquement -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAGE BIEN-ÊTRE -->
+            <section id="wellness" class="tab-content">
+                <div class="container">
+                    <div class="page-header">
+                        <h2>Gestion du Stress et Bien-être</h2>
+                        <p>Prenez soin de votre santé mentale et physique</p>
+                    </div>
+                    
+                    <div class="wellness-container">
+                        <div class="wellness-grid">
+                            <div class="card wellness-breathing">
+                                <div class="card__body">
+                                    <h3>Exercices de Respiration</h3>
+                                    <div class="breathing-exercises">
+                                        <button class="breathing-btn btn btn--outline" data-exercise="4-7-8">4-7-8 (5min)</button>
+                                        <button class="breathing-btn btn btn--outline" data-exercise="coherence">Cohérence cardiaque (10min)</button>
+                                        <button class="breathing-btn btn btn--outline" data-exercise="carre">Respiration carrée (8min)</button>
+                                    </div>
+                                    <div class="breathing-guide" id="breathingGuide" style="display: none;">
+                                        <div class="breathing-circle"></div>
+                                        <div class="breathing-instruction"></div>
+                                        <button class="btn btn--secondary" id="stopBreathing">Arrêter</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card wellness-mood">
+                                <div class="card__body">
+                                    <h3>Suivi de l'Humeur</h3>
+                                    <div class="mood-tracker">
+                                        <p>Comment vous sentez-vous aujourd'hui ?</p>
+                                        <div class="mood-scale">
+                                            <button class="mood-btn" data-mood="1">😞</button>
+                                            <button class="mood-btn" data-mood="2">😕</button>
+                                            <button class="mood-btn" data-mood="3">😐</button>
+                                            <button class="mood-btn" data-mood="4">🙂</button>
+                                            <button class="mood-btn" data-mood="5">😊</button>
+                                        </div>
+                                        <div class="mood-history" id="moodHistory">
+                                            <!-- Historique de l'humeur -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card wellness-tips">
+                                <div class="card__body">
+                                    <h3>Conseils du Jour</h3>
+                                    <div class="daily-tip" id="dailyTip">
+                                        <!-- Conseil généré dynamiquement -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAGE ANALYTICS -->
+            <section id="analytics" class="tab-content">
+                <div class="container">
+                    <div class="page-header">
+                        <h2>Tableau de Bord Analytics</h2>
+                        <p>Analysez votre progression et optimisez votre productivité</p>
+                    </div>
+                    
+                    <div class="analytics-container">
+                        <div class="analytics-grid">
+                            <div class="card analytics-overview">
+                                <div class="card__body">
+                                    <h3>Vue d'ensemble</h3>
+                                    <div class="overview-stats">
+                                        <div class="overview-stat">
+                                            <span class="stat-number" id="weeklyHours">0h</span>
+                                            <span class="stat-label">Cette semaine</span>
+                                        </div>
+                                        <div class="overview-stat">
+                                            <span class="stat-number" id="habitStreak">0</span>
+                                            <span class="stat-label">Série d'habitudes</span>
+                                        </div>
+                                        <div class="overview-stat">
+                                            <span class="stat-number" id="completionRate">0%</span>
+                                            <span class="stat-label">Taux de réussite</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card analytics-chart">
+                                <div class="card__body">
+                                    <h3>Temps par Matière</h3>
+                                    <div class="chart-container">
+                                        <canvas id="subjectChart" width="400" height="200"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card analytics-progress">
+                                <div class="card__body">
+                                    <h3>Progression Hebdomadaire</h3>
+                                    <div class="chart-container">
+                                        <canvas id="progressChart" width="400" height="200"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAGE RAPPELS -->
+            <section id="reminders" class="tab-content">
+                <div class="container">
+                    <div class="page-header">
+                        <h2>Rappels Intelligents</h2>
+                        <p>Ne manquez jamais une échéance importante</p>
+                    </div>
+                    
+                    <div class="reminders-container">
+                        <div class="reminder-form">
+                            <div class="card">
+                                <div class="card__body">
+                                    <h3>Créer un rappel</h3>
+                                    <form id="reminderForm">
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="reminderTitle" class="form-label">Titre du rappel</label>
+                                                <input type="text" id="reminderTitle" class="form-control" required placeholder="Ex: DS de Mathématiques">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="reminderType" class="form-label">Type</label>
+                                                <select id="reminderType" class="form-control" required>
+                                                    <option value="">Sélectionner le type</option>
+                                                    <option value="Devoir à rendre">Devoir à rendre</option>
+                                                    <option value="Colle/Khôlle">Colle/Khôlle</option>
+                                                    <option value="DS/Concours blanc">DS/Concours blanc</option>
+                                                    <option value="Révision">Révision</option>
+                                                    <option value="Personnel">Personnel</option>
+                                                    <option value="Administratif">Administratif</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="reminderDate" class="form-label">Date</label>
+                                                <input type="date" id="reminderDate" class="form-control" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="reminderTime" class="form-label">Heure</label>
+                                                <input type="time" id="reminderTime" class="form-control" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="reminderPriority" class="form-label">Priorité</label>
+                                                <select id="reminderPriority" class="form-control" required>
+                                                    <option value="low">Faible</option>
+                                                    <option value="medium" selected>Moyenne</option>
+                                                    <option value="high">Élevée</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn--primary">Créer le rappel</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="reminders-list" id="remindersList">
+                            <!-- Liste des rappels -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="container">
+                <div class="footer-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalTasksFooter">0</span>
+                        <span class="stat-label">Tâches totales</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="completedTasksFooter">0</span>
+                        <span class="stat-label">Tâches terminées</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="productivityScore">0%</span>
+                        <span class="stat-label">Score productivité</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
