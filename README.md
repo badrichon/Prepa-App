@@ -34,8 +34,10 @@ PrepApp est une application web sobre en **mode sombre**, pensée pour les étud
 - **LocalStorage** pour sauvegarder les tâches et paramètres de l’utilisateur en local entre les sessions .
 
 ---
-## 🧿 Aperçu
+## 🧿 Aperç
+**Light Mode :**
 <img width="1465" height="945" alt="image" src="https://github.com/user-attachments/assets/09fc459b-37ba-4b4c-9a21-b015c3c81c93" />
+**Dark Mode :**
 <img width="1340" height="929" alt="image" src="https://github.com/user-attachments/assets/a1f533b9-aeaa-4bee-ae22-67fe50de62b1" />
 
 
