@@ -1,4 +1,4 @@
-# 🧠 PrepApp – Suite de productivité pour classes préparatoires
+# 🧠 PrepApp – Suivie de productivité 
 
 PrepApp est une application web sobre en **mode sombre**, pensée pour les étudiants de prépa qui veulent mieux gérer leurs tâches, leurs révisions et leur énergie grâce à une matrice d’Eisenhower moderne et des outils de productivité intégrés.
 
